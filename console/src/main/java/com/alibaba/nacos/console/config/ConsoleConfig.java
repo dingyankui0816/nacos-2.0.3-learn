@@ -41,12 +41,30 @@ import java.time.ZoneId;
 @EnableScheduling
 @PropertySource("/application.properties")
 public class ConsoleConfig {
-    
+
+    /**
+     * 权限校验 缓存初始化
+     */
     @Autowired
     private ControllerMethodsCache methodsCache;
     
     /**
      * Init.
+     *
+     * 基于包名 缓存url与RequestMethod信息映射，缓存RequestMethod信息与Class.Method映射
+     *
+     * 缓存url与RequestMethod信息映射：
+     *  {@link ControllerMethodsCache#urlLookup}
+     *  key: RequestMethod.name() --> api url
+     *  value: List<RequestMappingInfo> todo 为什么是列表
+     *
+     * 缓存RequestMethod信息与Class.Method映射
+     *
+     *  {@link ControllerMethodsCache#methods}
+     *
+     *  key: RequestMappingInfo
+     *  value: Class.Method
+     *
      */
     @PostConstruct
     public void init() {

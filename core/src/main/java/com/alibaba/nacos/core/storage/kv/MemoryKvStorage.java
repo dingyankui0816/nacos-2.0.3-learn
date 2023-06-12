@@ -33,7 +33,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 public class MemoryKvStorage implements KvStorage {
-    
+
+    /**
+     * todo 为什么要用跳跃结构的Map 存储k-v
+     */
     private final Map<Key, byte[]> storage = new ConcurrentSkipListMap<>();
     
     @Override

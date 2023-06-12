@@ -37,12 +37,8 @@ public class ConsistencyConfiguration {
 
 
     /**
-     * @Description: 初始化 CP 一致性协议 实现类
-     * 当前初始化为 ： {@link JRaftProtocol}
-     * @author Levi.Ding
-     * @date 2023/6/7 14:40
-     * @param memberManager :
-     * @return : com.alibaba.nacos.consistency.cp.CPProtocol
+     * @Description: 将 CP 一致性协议实现类注入至IOC容器
+     * 实现类 ： {@link JRaftProtocol}
      */
     @Bean(value = "strongAgreementProtocol")
     public CPProtocol strongAgreementProtocol(ServerMemberManager memberManager) throws Exception {

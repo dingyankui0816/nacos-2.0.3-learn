@@ -26,6 +26,16 @@ import java.util.Map;
  *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
+
+/**
+ * 服务模块数据存储 接口
+ *
+ * 《Nacos架构与原理》
+ * 由于 Nacos 的服务模块存储，更多的都是根据单个或者多个唯⼀key 去执行点查的操作
+ * ，因此Key-Value 类型的存储接口最适合不过
+ *
+ *
+ */
 public interface KvStorage {
     
     enum KvType {

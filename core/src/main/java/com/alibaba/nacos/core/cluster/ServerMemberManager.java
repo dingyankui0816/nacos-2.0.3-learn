@@ -97,6 +97,7 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
     
     /**
      * Cluster node list.
+     * 集群节点列表
      */
     private volatile ConcurrentSkipListMap<String, Member> serverList;
     
@@ -327,6 +328,7 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
     
     /**
      * return this cluster all members without self.
+     * 返回除去自身外的其他节点列表
      *
      * @return {@link Collection} all member without self
      */

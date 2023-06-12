@@ -24,6 +24,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 /**
  * Nacos starter.
  *
+ * Nacos 启动类
+ *
  * @author nacos
  */
 @SpringBootApplication(scanBasePackages = "com.alibaba.nacos")

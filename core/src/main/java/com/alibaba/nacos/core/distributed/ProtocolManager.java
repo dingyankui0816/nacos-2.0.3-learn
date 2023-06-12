@@ -109,7 +109,10 @@ public class ProtocolManager extends MemberChangeListener implements DisposableB
             cpProtocol.shutdown();
         }
     }
-    
+
+    /**
+     * todo ？？？？？   DistroProtocol 并没有实现 APProtocol 接口，这里的初始化应该是初始化不到啊
+     */
     private void initAPProtocol() {
         ApplicationUtils.getBeanIfExist(APProtocol.class, protocol -> {
             Class configType = ClassUtils.resolveGenericType(protocol.getClass());
@@ -119,7 +122,10 @@ public class ProtocolManager extends MemberChangeListener implements DisposableB
             ProtocolManager.this.apProtocol = protocol;
         });
     }
-    
+
+    /**
+     * 基于Spring IOC 容器中存在的CP协议实现类进行初始化
+     */
     private void initCPProtocol() {
         ApplicationUtils.getBeanIfExist(CPProtocol.class, protocol -> {
             Class configType = ClassUtils.resolveGenericType(protocol.getClass());

@@ -77,6 +77,8 @@ public class DistroMapper extends MemberChangeListener {
     /**
      * Judge whether current server is responsible for input tag.
      *
+     *
+     *
      * @param responsibleTag responsible tag, serviceName for v1 and ip:port for v2
      * @return true if input service is response, otherwise false
      */

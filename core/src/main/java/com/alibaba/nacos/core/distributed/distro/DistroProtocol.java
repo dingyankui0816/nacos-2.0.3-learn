@@ -40,6 +40,17 @@ import org.springframework.stereotype.Component;
  *
  * @author xiweng.yy
  */
+
+/**
+ * 将AP一致性协议注入至IOC容器
+ *
+ * 《Nacos架构与原理》
+ *
+ *   Nacos 每个节点是平等的都可以处理写请求，同时把新数据同步到其他节点。
+ *   每个节点只负责部分数据，定时发送自己负责数据的校验值到其他节点来保持数据⼀致性。
+ *   每个节点独立处理读请求，及时从本地发出响应。
+ *
+ */
 @Component
 public class DistroProtocol {
     
