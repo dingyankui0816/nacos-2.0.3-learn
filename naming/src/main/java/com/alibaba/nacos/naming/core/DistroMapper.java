@@ -77,7 +77,9 @@ public class DistroMapper extends MemberChangeListener {
     /**
      * Judge whether current server is responsible for input tag.
      *
+     * 当前方法就是 计算是否是该节点复负责 的算法
      *
+     * todo 研究算法  target >= index && target <= lastIndex
      *
      * @param responsibleTag responsible tag, serviceName for v1 and ip:port for v2
      * @return true if input service is response, otherwise false
@@ -106,6 +108,10 @@ public class DistroMapper extends MemberChangeListener {
     
     /**
      * Calculate which other server response input tag.
+     *
+     * 计算当前请求属于哪个节点，用于转发
+     *
+     * todo 节点选择算法  distroHash(responsibleTag) % servers.size()
      *
      * @param responsibleTag responsible tag, serviceName for v1 and ip:port for v2
      * @return server which response input service

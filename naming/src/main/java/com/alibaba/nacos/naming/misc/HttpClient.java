@@ -104,6 +104,7 @@ public class HttpClient {
         }
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.addParam(HttpHeaderConsts.CLIENT_VERSION_HEADER, VersionUtils.version);
+        //标识当前请求是由Nacos Server 转发的
         header.addParam(HttpHeaderConsts.USER_AGENT_HEADER, UtilsAndCommons.SERVER_VERSION);
         header.addParam(HttpHeaderConsts.REQUEST_SOURCE_HEADER, EnvUtil.getLocalAddress());
         header.addParam(HttpHeaderConsts.ACCEPT_CHARSET, encoding);
@@ -115,6 +116,7 @@ public class HttpClient {
         query.addParam(FieldsConstants.ENCODING, ENCODING);
         query.addParam(FieldsConstants.NOFIX, NOFIX);
         try {
+            //转发
             return APACHE_SYNC_NACOS_REST_TEMPLATE
                     .exchange(url, httpClientConfig, header, query, body, method, String.class);
         } catch (Exception e) {

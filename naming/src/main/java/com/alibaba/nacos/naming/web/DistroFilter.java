@@ -51,6 +51,12 @@ import java.util.Map;
 /**
  * Distro filter.
  *
+ * Distro 请求拦截算法
+ *
+ * 《Nacos架构与原理》
+ *
+ * 前置的 Filter 拦截请求，并根据请求中包含的 IP 和 port 信息计算其所属的Distro 责任节点，并将该请求转发到所属的 Distro 责任节点上。
+ *
  * @author nacos
  */
 public class DistroFilter implements Filter {
@@ -97,13 +103,15 @@ public class DistroFilter implements Filter {
                 return;
             }
             String distroTag = distroTagGenerator.getResponsibleTag(req);
-            
+
+            //当前节点是否负责该请求
             if (distroMapper.responsible(distroTag)) {
                 filterChain.doFilter(req, resp);
                 return;
             }
             
-            // proxy request to other server if necessary:
+            // 判断当前请求是否从 其他 nacos 节点发出。如果是 则直接响应报错，否则转发请求
+            // 这里用来校验 转发请求只会产生一次，如果转发到对应的节点 当前节点依旧不负责当前请求，那么直接响应 400
             String userAgent = req.getHeader(HttpHeaderConsts.USER_AGENT_HEADER);
             
             if (StringUtils.isNotBlank(userAgent) && userAgent.contains(UtilsAndCommons.NACOS_SERVER_HEADER)) {
@@ -113,7 +121,8 @@ public class DistroFilter implements Filter {
                         "receive invalid redirect request from peer " + req.getRemoteAddr());
                 return;
             }
-            
+
+            //选择集群中其他健康节点，用于转发请求
             final String targetServer = distroMapper.mapSrv(distroTag);
             
             List<String> headerList = new ArrayList<>(16);
@@ -126,12 +135,13 @@ public class DistroFilter implements Filter {
             
             final String body = IoUtils.toString(req.getInputStream(), Charsets.UTF_8.name());
             final Map<String, String> paramsValue = HttpClient.translateParameterMap(req.getParameterMap());
-            
+            //包装转发信息，调用转发
             RestResult<String> result = HttpClient
                     .request("http://" + targetServer + req.getRequestURI(), headerList, paramsValue, body,
                             PROXY_CONNECT_TIMEOUT, PROXY_READ_TIMEOUT, Charsets.UTF_8.name(), req.getMethod());
             String data = result.ok() ? result.getData() : result.getMessage();
             try {
+                //将响应返回至客户端
                 WebUtils.response(resp, data, result.getCode());
             } catch (Exception ignore) {
                 Loggers.SRV_LOG.warn("[DISTRO-FILTER] request failed: " + distroMapper.mapSrv(distroTag) + urlString);
