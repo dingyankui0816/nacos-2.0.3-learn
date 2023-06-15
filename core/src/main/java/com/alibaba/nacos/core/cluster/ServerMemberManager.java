@@ -75,6 +75,14 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * ServerMemberManager#isUnHealth(String)} Whether the target node is healthy {@link
  * ServerMemberManager#initAndStartLookup()} Initializes the addressing mode
  *
+ *
+ * 《Nacos架构与原理》
+ *
+ *
+ * ServerMemberManager 存储着本节点所知道的所有成员节点列表信息，提供了针对成员节点的增删改查操作
+ * ，同时维护了⼀个 MemberLookup ，方便进行动态切换成员节点寻址方式。
+ *
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 @Component(value = "serverMemberManager")

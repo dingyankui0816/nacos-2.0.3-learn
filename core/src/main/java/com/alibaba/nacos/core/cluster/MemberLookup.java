@@ -25,6 +25,16 @@ import java.util.Map;
 /**
  * Member node addressing mode.
  *
+ * Nacos 寻址机制
+ *
+ *
+ * 《Nacos架构与原理》
+ *
+ * 无论是单机模式，还是集群模式，其根本区别只是 Nacos 成员节点的个数是单个还是多个，
+ * 并且，要能够感知到节点的变更情况：节点是增加了还是减少了；当前最新的成员列表信息是什么；
+ * 以何种方式去管理成员列表信息；如何快速的支持新的、更优秀的成员列表管理模式等等。
+ * 针对上述需求点，Nacos抽象出了⼀个 MemberLookup 接口
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 public interface MemberLookup {
@@ -45,6 +55,8 @@ public interface MemberLookup {
     
     /**
      * Inject the ServerMemberManager property.
+     *
+     * 将 ServerMemberManager 注入到 MemberLookup 中
      *
      * @param memberManager {@link ServerMemberManager}
      */

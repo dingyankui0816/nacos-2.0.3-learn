@@ -182,6 +182,9 @@ public class WatchFileCenter {
             
             try {
                 WatchService service = FILE_SYSTEM.newWatchService();
+                //监听当前路径下的变更事件
+                // StandardWatchEventKinds.OVERFLOW, StandardWatchEventKinds.ENTRY_MODIFY,
+                // StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE
                 p.register(service, StandardWatchEventKinds.OVERFLOW, StandardWatchEventKinds.ENTRY_MODIFY,
                         StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
                 this.watchService = service;

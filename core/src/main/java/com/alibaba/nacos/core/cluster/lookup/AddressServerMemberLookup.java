@@ -39,6 +39,10 @@ import java.util.Map;
 /**
  * Cluster member addressing mode for the address server.
  *
+ * 地址服务器寻址
+ *
+ * todo 引入地址服务器，所有节点都从地址服务器拿去集群
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 public class AddressServerMemberLookup extends AbstractMemberLookup {
@@ -149,7 +153,7 @@ public class AddressServerMemberLookup extends AbstractMemberLookup {
         if (!success) {
             throw new NacosException(NacosException.SERVER_ERROR, ex);
         }
-        
+        //todo 每隔5秒都拉取地址服务器中的集群配置
         GlobalExecutor.scheduleByCommon(new AddressServerSyncTask(), DEFAULT_SYNC_TASK_DELAY_MS);
     }
     
@@ -198,6 +202,7 @@ public class AddressServerMemberLookup extends AbstractMemberLookup {
                 return;
             }
             try {
+                //todo 为什么没有先去判断是否有变更文件 再将集群信息添加至ServerMemberManager中
                 syncFromAddressUrl();
             } catch (Throwable ex) {
                 addressServerFailCount++;

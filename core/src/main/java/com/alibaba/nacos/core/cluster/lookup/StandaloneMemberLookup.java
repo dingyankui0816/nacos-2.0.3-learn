@@ -26,13 +26,17 @@ import java.util.Collections;
 /**
  * Member node addressing mode in stand-alone mode.
  *
+ * 单机模式的寻址机制
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 public class StandaloneMemberLookup extends AbstractMemberLookup {
     
     @Override
     public void doStart() {
+        //获取自身节点的 ip:port
         String url = InetUtils.getSelfIP() + ":" + EnvUtil.getPort();
+        //存储到 ServerMemberManager 中
         afterLookup(MemberUtil.readServerConf(Collections.singletonList(url)));
     }
     
