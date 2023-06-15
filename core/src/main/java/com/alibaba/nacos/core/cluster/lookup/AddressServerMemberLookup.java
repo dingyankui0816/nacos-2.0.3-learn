@@ -41,28 +41,56 @@ import java.util.Map;
  *
  * 地址服务器寻址
  *
- * todo 引入地址服务器，所有节点都从地址服务器拿去集群
+ * 《Nacos架构与原理》
+ *
+ * 引入地址服务器，所有节点都从地址服务器拿去集群
+ *
+ *
  *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  */
 public class AddressServerMemberLookup extends AbstractMemberLookup {
     
     private final GenericType<String> genericType = new GenericType<String>() { };
-    
+
+    /**
+     * 地址服务器IP
+     */
     public String domainName;
-    
+
+    /**
+     * 地址服务器端口
+     */
     public String addressPort;
-    
+
+    /**
+     * 地址服务器请求路径
+     */
     public String addressUrl;
-    
+
+    /**
+     * "http://" + domainName + ":" + addressPort + "/env"
+     */
     public String envIdUrl;
-    
+
+    /**
+     * "http://" + domainName + ":" + addressPort + addressUrl
+     */
     public String addressServerUrl;
-    
+
+    /**
+     * 地址服务器健康标识
+     */
     private volatile boolean isAddressServerHealth = true;
-    
+
+    /**
+     * 地址服务器请求失败次数
+     */
     private int addressServerFailCount = 0;
-    
+
+    /**
+     * 地址服务器最大请求失败次数
+     */
     private int maxFailCount = 12;
     
     private final NacosRestTemplate restTemplate = HttpClientBeanHolder.getNacosRestTemplate(Loggers.CORE);

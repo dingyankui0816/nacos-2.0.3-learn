@@ -347,11 +347,12 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
     }
     
     synchronized boolean memberChange(Collection<Member> members) {
-        
+        //传入成员为空 则不变更
         if (members == null || members.isEmpty()) {
             return false;
         }
-        
+
+        //当前传入成员是否包含本节点
         boolean isContainSelfIp = members.stream()
                 .anyMatch(ipPortTmp -> Objects.equals(localAddress, ipPortTmp.getAddress()));
         
@@ -359,6 +360,7 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
             isInIpList = true;
         } else {
             isInIpList = false;
+            //将自身节点加入成员中
             members.add(this.self);
             Loggers.CLUSTER.warn("[serverlist] self ip {} not in serverlist {}", self, members);
         }
@@ -367,14 +369,17 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
         // must have changed; if the number of clusters is the same, then compare whether
         // there is a difference; if there is a difference, then the cluster node changes
         // are involved and all recipients need to be notified of the node change event
-        
+
+        //传入的集群成员与目前集群成员数量是否一致
         boolean hasChange = members.size() != serverList.size();
         ConcurrentSkipListMap<String, Member> tmpMap = new ConcurrentSkipListMap<>();
         Set<String> tmpAddressInfo = new ConcurrentHashSet<>();
+        //循环传入的集群成员，与目前集群成员做ip对比
         for (Member member : members) {
             final String address = member.getAddress();
             
             Member existMember = serverList.get(address);
+            //传入的集群成员地址 在当前集群成员中不存在 则标记集群变更状态
             if (existMember == null) {
                 hasChange = true;
                 tmpMap.put(address, member);
@@ -387,8 +392,9 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
                 tmpAddressInfo.add(address);
             }
         }
-        
+        //保存当前传入的集群列表 作为最新的一次集群列表
         serverList = tmpMap;
+        //保存当前状态为UP的集群地址
         memberAddressInfos = tmpAddressInfo;
         
         Collection<Member> finalMembers = allMembers();
@@ -398,6 +404,7 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
         // Persist the current cluster node information to cluster.conf
         // <important> need to put the event publication into a synchronized block to ensure
         // that the event publication is sequential
+        //如果发现集群有变更，将当前成员信息刷到cluster.conf 文件中并且通知所有集群成员有成员变更
         if (hasChange) {
             MemberUtil.syncToFile(finalMembers);
             Event event = MembersChangeEvent.builder().members(finalMembers).build();

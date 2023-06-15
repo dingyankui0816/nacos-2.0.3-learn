@@ -39,6 +39,7 @@ public abstract class AbstractMemberLookup implements MemberLookup {
     
     @Override
     public void afterLookup(Collection<Member> members) {
+        //变更集群成员
         this.memberManager.memberChange(members);
     }
     
