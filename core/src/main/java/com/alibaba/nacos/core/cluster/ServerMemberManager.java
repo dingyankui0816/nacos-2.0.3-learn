@@ -146,14 +146,17 @@ public class ServerMemberManager implements ApplicationListener<WebServerInitial
     
     public ServerMemberManager(ServletContext servletContext) throws Exception {
         this.serverList = new ConcurrentSkipListMap<>();
+        //环境上下文Path  /nacos
         EnvUtil.setContextPath(servletContext.getContextPath());
-        
+        //初始化 ServerMemberManager
         init();
     }
     
     protected void init() throws NacosException {
         Loggers.CORE.info("Nacos-related cluster resource initialization");
+        //设置节点port 默认 8848
         this.port = EnvUtil.getProperty(SERVER_PORT_PROPERTY, Integer.class, DEFAULT_SERVER_PORT);
+        //设置节点address
         this.localAddress = InetUtils.getSelfIP() + ":" + port;
         this.self = MemberUtil.singleParse(this.localAddress);
         this.self.setExtendVal(MemberMetaDataConstants.VERSION, VersionUtils.version);

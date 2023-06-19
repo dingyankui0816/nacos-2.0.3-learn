@@ -35,13 +35,19 @@ import static com.alibaba.nacos.common.notify.NotifyCenter.ringBufferSize;
  *
  * <p>Internally, use {@link ArrayBlockingQueue <Event/>} as a message staging queue.
  *
+ * 异步发布事件，当事件队列溢出时，使用业务线程进行发送
+ * 发布事件线程名称 : "nacos.publisher-" + type.getName()
+ *
  * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
  * @author zongtanghu
  */
 public class DefaultPublisher extends Thread implements EventPublisher {
     
     protected static final Logger LOGGER = LoggerFactory.getLogger(NotifyCenter.class);
-    
+
+    /**
+     * 是否已初始化
+     */
     private volatile boolean initialized = false;
     
     private volatile boolean shutdown = false;
@@ -61,11 +67,17 @@ public class DefaultPublisher extends Thread implements EventPublisher {
     
     @Override
     public void init(Class<? extends Event> type, int bufferSize) {
+        //todo 设置为守护线程
         setDaemon(true);
+        //设置线程名称
         setName("nacos.publisher-" + type.getName());
+        //绑定一个事件类型，todo 没有实际意义
         this.eventType = type;
+        //队列最大容量
         this.queueMaxSize = bufferSize;
+        //存储事件队列
         this.queue = new ArrayBlockingQueue<>(bufferSize);
+        //启动事件发布线程
         start();
     }
     
@@ -77,10 +89,14 @@ public class DefaultPublisher extends Thread implements EventPublisher {
     public synchronized void start() {
         if (!initialized) {
             // start just called once
+            //启动
             super.start();
+            //未设置队列最大容量
             if (queueMaxSize == -1) {
+                //设置Nacos 对于队列默认大小  16384
                 queueMaxSize = ringBufferSize;
             }
+            //标识初始化成功
             initialized = true;
         }
     }
@@ -94,7 +110,10 @@ public class DefaultPublisher extends Thread implements EventPublisher {
     public void run() {
         openEventHandler();
     }
-    
+
+    /**
+     * 事件处理器
+     */
     void openEventHandler() {
         try {
             

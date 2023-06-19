@@ -68,10 +68,13 @@ public class NotifyCenter {
     static {
         // Internal ArrayBlockingQueue buffer size. For applications with high write throughput,
         // this value needs to be increased appropriately. default value is 16384
+
+        //Nacos中 ArrayBlockingQueue 默认队列大小
         String ringBufferSizeProperty = "nacos.core.notify.ring-buffer-size";
         ringBufferSize = Integer.getInteger(ringBufferSizeProperty, 16384);
-        
+
         // The size of the public publisher's message staging queue buffer
+        //事件发布共享队列默认大小
         String shareBufferSizeProperty = "nacos.core.notify.share-buffer-size";
         shareBufferSize = Integer.getInteger(shareBufferSizeProperty, 1024);
         
@@ -98,7 +101,9 @@ public class NotifyCenter {
         try {
             
             // Create and init DefaultSharePublisher instance.
+            //创建发布者实例
             INSTANCE.sharePublisher = new DefaultSharePublisher();
+            //初始化发布者实例
             INSTANCE.sharePublisher.init(SlowEvent.class, shareBufferSize);
             
         } catch (Throwable ex) {

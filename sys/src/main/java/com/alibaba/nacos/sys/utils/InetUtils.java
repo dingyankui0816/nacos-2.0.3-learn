@@ -62,6 +62,7 @@ public class InetUtils {
     private static final List<String> IGNORED_INTERFACES = new ArrayList<String>();
     
     static {
+        //注册共享发布者
         NotifyCenter.registerToSharePublisher(IPChangeEvent.class);
         
         useOnlySiteLocalInterface = Boolean.parseBoolean(EnvUtil.getProperty(USE_ONLY_SITE_INTERFACES));
@@ -130,7 +131,11 @@ public class InetUtils {
         
         ipAutoRefresh.run();
     }
-    
+
+    /**
+     * nacos.server.ip
+     * @return
+     */
     public static String getSelfIP() {
         return selfIP;
     }
