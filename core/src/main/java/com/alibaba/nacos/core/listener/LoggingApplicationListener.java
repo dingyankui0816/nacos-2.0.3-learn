@@ -40,7 +40,15 @@ public class LoggingApplicationListener implements NacosApplicationListener {
     public void starting() {
     
     }
-    
+
+    /**
+     * @Description: 设置日志配置文件路径
+     * 默认地址 CLASSPATH_URL_PREFIX + "META-INF/logback/nacos.xml"
+     * @author Levi.Ding
+     * @date 2023/6/26 15:34
+     * @param environment :
+     * @return : void
+     */
     @Override
     public void environmentPrepared(ConfigurableEnvironment environment) {
         if (!environment.containsProperty(CONFIG_PROPERTY)) {

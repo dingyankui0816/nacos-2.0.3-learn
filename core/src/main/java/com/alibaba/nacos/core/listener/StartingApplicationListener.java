@@ -146,7 +146,14 @@ public class StartingApplicationListener implements NacosApplicationListener {
         LOGGER.error("Nacos failed to start, please see {} for more details.",
                 Paths.get(EnvUtil.getNacosHome(), "logs/nacos.log"));
     }
-    
+
+    /**
+     * @Description: 将环境配置注入到Nacos Env
+     * @author Levi.Ding
+     * @date 2023/6/26 18:02
+     * @param environment :
+     * @return : void
+     */
     private void injectEnvironment(ConfigurableEnvironment environment) {
         EnvUtil.setEnvironment(environment);
     }
@@ -217,7 +224,13 @@ public class StartingApplicationListener implements NacosApplicationListener {
             scheduledExecutorService.shutdownNow();
         }
     }
-    
+
+    /**
+     * @Description: 确定 nacos/logs,nacos/conf,nacos/data 为文件夹
+     * @author Levi.Ding
+     * @date 2023/6/26 17:33
+     * @return : void
+     */
     private void makeWorkDir() {
         String[] dirNames = new String[] {"logs", "conf", "data"};
         for (String dirName : dirNames) {

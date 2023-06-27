@@ -31,6 +31,10 @@ import java.util.List;
 /**
  * {@link org.springframework.boot.SpringApplicationRunListener} before {@link EventPublishingRunListener} execution.
  *
+ * SpringApplication 启动监听器
+ * Order 顺序 HIGHEST_PRECEDENCE ，第一个执行
+ *
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 0.2.2
  */
