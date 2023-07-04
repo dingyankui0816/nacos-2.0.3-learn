@@ -305,6 +305,8 @@ public class EnvUtil {
     /**
      * read cluster.conf to ip list.
      *
+     * 读取 nacos/conf/cluster.conf 中节点IP信息
+     *
      * @return ip list.
      * @throws IOException ioexception {@link IOException}
      */

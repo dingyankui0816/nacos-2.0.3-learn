@@ -80,7 +80,8 @@ public class WatchFileCenter {
     private static int NOW_WATCH_JOB_CNT = 0;
     
     /**
-     * Register {@link FileWatcher} in this directory.
+     *
+     * 监听 paths 文件夹路径变更事件
      *
      * @param paths   directory
      * @param watcher {@link FileWatcher}

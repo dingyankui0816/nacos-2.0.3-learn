@@ -158,6 +158,14 @@ public class StartingApplicationListener implements NacosApplicationListener {
         EnvUtil.setEnvironment(environment);
     }
     
+    /**
+     * @Description: 将 conf/application.properties 中配置信息 加载到环境配置中
+     * 注册 conf/application.properties 文件监听器
+     * @author Levi.Ding
+     * @date 2023/6/29 16:35
+     * @param environment : 
+     * @return : void
+     */
     private void loadPreProperties(ConfigurableEnvironment environment) {
         try {
             SOURCES.putAll(EnvUtil.loadProperties(EnvUtil.getApplicationConfFileResource()));
@@ -169,8 +177,15 @@ public class StartingApplicationListener implements NacosApplicationListener {
         }
     }
     
+    /**
+     * @Description: 监听 nacos/conf/application.properties 文件
+     * 发生变更时，从新加载配置 ，并发布 ServerConfigChangeEvent.newEvent() 事件
+     * @author Levi.Ding
+     * @date 2023/6/29 16:43
+     * @return : void
+     */
     private void registerWatcher() throws NacosException {
-        
+
         WatchFileCenter.registerWatcher(EnvUtil.getConfPath(), new FileWatcher() {
             @Override
             public void onChange(FileChangeEvent event) {
@@ -190,13 +205,21 @@ public class StartingApplicationListener implements NacosApplicationListener {
         });
         
     }
-    
+
+    /**
+     * @Description: 初始化系统配置
+     * @author Levi.Ding
+     * @date 2023/6/29 16:57
+     * @return : void
+     */
     private void initSystemProperty() {
+        //集群模式
         if (EnvUtil.getStandaloneMode()) {
             System.setProperty(MODE_PROPERTY_KEY_STAND_MODE, NACOS_MODE_STAND_ALONE);
         } else {
             System.setProperty(MODE_PROPERTY_KEY_STAND_MODE, NACOS_MODE_CLUSTER);
         }
+        //使用模式
         if (EnvUtil.getFunctionMode() == null) {
             System.setProperty(MODE_PROPERTY_KEY_FUNCTION_MODE, DEFAULT_FUNCTION_MODE);
         } else if (EnvUtil.FUNCTION_MODE_CONFIG.equals(EnvUtil.getFunctionMode())) {
@@ -204,10 +227,16 @@ public class StartingApplicationListener implements NacosApplicationListener {
         } else if (EnvUtil.FUNCTION_MODE_NAMING.equals(EnvUtil.getFunctionMode())) {
             System.setProperty(MODE_PROPERTY_KEY_FUNCTION_MODE, EnvUtil.FUNCTION_MODE_NAMING);
         }
-        
+        //节点ip
         System.setProperty(LOCAL_IP_PROPERTY_KEY, InetUtils.getSelfIP());
     }
-    
+
+    /**
+     * @Description: 集群模式， 加载一遍集群节点文件 nacos/conf/cluster.conf 无任何存储，只进行加载，如果文件不存在 则 log error
+     * @author Levi.Ding
+     * @date 2023/7/3 14:18
+     * @return : void
+     */
     private void logClusterConf() {
         if (!EnvUtil.getStandaloneMode()) {
             try {
@@ -242,7 +271,13 @@ public class StartingApplicationListener implements NacosApplicationListener {
             }
         }
     }
-    
+
+    /**
+     * @Description: 集群模式 节点启动中时记录日志
+     * @author Levi.Ding
+     * @date 2023/7/3 15:10
+     * @return : void
+     */
     private void logStarting() {
         if (!EnvUtil.getStandaloneMode()) {
             

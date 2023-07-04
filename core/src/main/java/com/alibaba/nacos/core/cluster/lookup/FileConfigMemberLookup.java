@@ -20,6 +20,7 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.core.cluster.AbstractMemberLookup;
 import com.alibaba.nacos.core.cluster.Member;
 import com.alibaba.nacos.core.cluster.MemberUtil;
+import com.alibaba.nacos.core.cluster.ServerMemberManager;
 import com.alibaba.nacos.sys.env.EnvUtil;
 import com.alibaba.nacos.sys.file.FileChangeEvent;
 import com.alibaba.nacos.sys.file.FileWatcher;
@@ -62,7 +63,7 @@ public class FileConfigMemberLookup extends AbstractMemberLookup {
         }
         
         @Override
-        //判断当前变更事件是否属于该监听器
+        //判断当前变更事件是否属于该监听器  文件 cluster.conf
         public boolean interest(String context) {
             return StringUtils.contains(context, DEFAULT_SEARCH_SEQ);
         }
@@ -94,7 +95,10 @@ public class FileConfigMemberLookup extends AbstractMemberLookup {
         //取消对该路径的监听
         WatchFileCenter.deregisterWatcher(EnvUtil.getConfPath(), watcher);
     }
-    
+
+    /**
+     * 获取 nacos/conf/cluster.conf中集群节点信息，并包装成 {@link Member} ,将{@link Member}传入{@link ServerMemberManager}进行集群成员变更
+     */
     private void readClusterConfFromDisk() {
         Collection<Member> tmpMembers = new ArrayList<>();
         try {
