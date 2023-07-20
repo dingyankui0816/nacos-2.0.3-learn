@@ -116,11 +116,13 @@ public class StartingApplicationListener implements NacosApplicationListener {
     
     @Override
     public void started(ConfigurableApplicationContext context) {
+        //标记启动中结束
         starting = false;
-        
+        //关闭启动中日志输出
         closeExecutor();
-        
+        //设置启动完成标识
         ApplicationUtils.setStarted(true);
+        //设置存储模式
         judgeStorageMode(context.getEnvironment());
     }
     
@@ -247,7 +249,13 @@ public class StartingApplicationListener implements NacosApplicationListener {
             }
         }
     }
-    
+
+    /**
+     * @Description: 关闭节点启动日志
+     * @author Levi.Ding
+     * @date 2023/7/20 15:40
+     * @return : void
+     */
     private void closeExecutor() {
         if (scheduledExecutorService != null) {
             scheduledExecutorService.shutdownNow();
@@ -291,7 +299,16 @@ public class StartingApplicationListener implements NacosApplicationListener {
             }, 1, 1, TimeUnit.SECONDS);
         }
     }
-    
+
+    /**
+     * @Description: 设置存储模式为 内置数据源 还是 外置数据源
+     * 单机模式下默认使用内置数据源，如果要开启外置数据源 需要设置 spring.datasource.platform=mysql
+     * 集群模式下默认使用外置数据源，如果要开启内置数据源 启动时需要增加 -p embedded 命令
+     * @author Levi.Ding
+     * @date 2023/7/20 15:58
+     * @param env :
+     * @return : void
+     */
     private void judgeStorageMode(ConfigurableEnvironment env) {
         
         // External data sources are used by default in cluster mode
